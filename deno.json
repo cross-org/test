@@ -1,0 +1,8 @@
+{
+  "name": "@cross/test",
+  "version": "0.0.1",
+  "exports": "./mod.ts",
+  "fmt": {
+    "lineWidth": 200
+  }
+}
