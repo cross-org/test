@@ -11,7 +11,7 @@ Truly cross runtime minimal testing framework working in collaboration with @std
 Example for deno and node
 
 ```
-npx add @cross/test @std/assert
+npx jsr add @cross/test @std/assert
 deno add @cross/test @std/assert
 ```
 
