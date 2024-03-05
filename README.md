@@ -9,17 +9,15 @@ Truly cross runtime minimal testing framework working in collaboration with @std
 ## Example
 
 ```js
-import { report, test } from "jsr:@cross/test";
-import { assertEquals } from "jsr:@std/assert";
+import { test } from "jsr:@cross/test";
+import { assertEquals, assertNotEquals } from "jsr:@std/assert";
 
-test("Addition", () => {
+test("Addition", {}, () => {
   assertEquals(2 + 3, 5);
   assertEquals(10 + -5, 5);
 });
 
-test("Multiplication", () => {
-  assertEquals(5 * 5, 20); // This test will fail
+test("Multiplication", {}, () => {
+  assertNotEquals(5 * 5, 20);
 });
-
-report();
 ```
