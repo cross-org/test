@@ -1,21 +1,19 @@
 /**
  * Enum of supported runtimes.
  */
-export enum Runtimes {
-  Deno = "deno",
-  Bun = "bun",
-  Node = "node",
-  Unsupported = "unsupported",
-}
+export const Runtimes = {
+  Deno: 1,
+  Bun: 2,
+  Node: 3,
+  Unsupported: 1000,
+};
 
-function getCurrentRuntime(): Runtimes {
+function getCurrentRuntime() {
   if (typeof Deno === "object") {
     return Runtimes.Deno;
-    // @ts-ignore cross runtime
   } else if (typeof Bun === "object") {
     return Runtimes.Bun;
   } else if (
-    // @ts-ignore cross runtime
     typeof process === "object" && typeof process.versions !== "undefined" && typeof process.versions.node !== "undefined"
   ) {
     return Runtimes.Node;

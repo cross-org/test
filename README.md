@@ -6,11 +6,22 @@
 
 Truly cross runtime minimal testing framework working in collaboration with @std/assert, for Node, Deno and Bun.
 
+## Install
+
+Example for deno and node
+
+```
+npx add @cross/test @std/assert
+deno add @cross/test @std/assert
+```
+
 ## Example
 
+my.test.js
+
 ```js
-import { test } from "jsr:@cross/test";
-import { assertEquals, assertNotEquals } from "jsr:@std/assert";
+import { test } from "@cross/test";
+import { assertEquals, assertNotEquals } from "@std/assert";
 
 test("Addition", {}, () => {
   assertEquals(2 + 3, 5);
@@ -21,3 +32,7 @@ test("Multiplication", {}, () => {
   assertNotEquals(5 * 5, 20);
 });
 ```
+
+## Running the tests
+
+Deno: `deno test` Node: `node --test`

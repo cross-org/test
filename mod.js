@@ -1,28 +1,20 @@
-import { CurrentRuntime, Runtimes } from "./runtime.ts";
+import { CurrentRuntime, Runtimes } from "./runtime.js";
 
-function transformOptionsToDeno(o) {
-  return o;
+let wrappedTestToUse;
+if (CurrentRuntime == Runtimes.Deno) {
+  const { wrappedTest } = await import("./shim.deno.js");
+  wrappedTestToUse = wrappedTest;
+} else if (CurrentRuntime == Runtimes.Node) {
+  const { wrappedTest } = await import("./shim.node.js");
+  wrappedTestToUse = wrappedTest;
+} else {
+  throw new Error("Unsupported runtime");
 }
-
-function wrapDenoTest(testFn) {
-  return async (c) => {
-    // Transform context if needed
-    await testFn(c);
-  };
-}
-
 /**
  * Defines and executes a single test.
  * @param {string} name - The name of the test.
  * @param {function} testFn - The function containing the test logic. The function should not take arguments or return a value.
  */
 export async function test(name, options, testFn) {
-  switch (CurrentRuntime) {
-    case Runtimes.Deno:
-      await Deno.test(name, transformOptionsToDeno(options), wrapDenoTest(testFn));
-      break;
-    case Runtimes.Unsupported:
-      console.error("Unsupported runtime");
-      break;
-  }
+  await wrappedTestToUse(name, options, testFn);
 }
