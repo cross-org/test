@@ -1,3 +1,4 @@
+// deno-lint-ignore no-unused-vars
 import { test } from "node:test";
 
 function transformOptions(o) {

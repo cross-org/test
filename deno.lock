@@ -2,12 +2,15 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "jsr:@std/assert": "jsr:@std/assert@0.218.2",
+      "jsr:@cross/runtime@^0.0.10": "jsr:@cross/runtime@0.0.10",
       "jsr:@std/assert@^0.218.2": "jsr:@std/assert@0.218.2",
       "jsr:@std/fmt@^0.218.2": "jsr:@std/fmt@0.218.2",
       "npm:@types/node": "npm:@types/node@18.16.19"
     },
     "jsr": {
+      "@cross/runtime@0.0.10": {
+        "integrity": "99906cc55a297b9168f6588a68604161a648651ac7abf084f0883935da2c6ecf"
+      },
       "@std/assert@0.218.2": {
         "integrity": "7f0a5a1a8cf86607cd6c2c030584096e1ffad27fc9271429a8cb48cfbdee5eaf",
         "dependencies": [
@@ -28,14 +31,8 @@
   "remote": {},
   "workspace": {
     "dependencies": [
-      "jsr:@cross/test@^0.0.2",
+      "jsr:@cross/runtime@^0.0.10",
       "jsr:@std/assert@^0.218.2"
-    ],
-    "packageJson": {
-      "dependencies": [
-        "npm:@jsr/cross__test@^0.0.2",
-        "npm:@jsr/std__assert@^0.218.2"
-      ]
-    }
+    ]
   }
 }

@@ -1,4 +1,4 @@
-import { test } from "./mod.js";
+import { test } from "./mod.ts";
 import { assertEquals, assertNotEquals } from "@std/assert";
 
 test("Addition", {}, () => {
