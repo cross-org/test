@@ -130,4 +130,7 @@ dist
 .pnp.*
 
 .npmrc
-.deno.lock
+deno.lock
+bun.lockb
+package.json
+bunfig.toml

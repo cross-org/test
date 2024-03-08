@@ -8,10 +8,15 @@ Truly cross runtime minimal testing framework working in collaboration with @std
 
 ## Install
 
-Example for deno and node
+Node:
 
 ```
 npx jsr add @cross/test @std/assert
+```
+
+Deno:
+
+```
 deno add @cross/test @std/assert
 ```
 
@@ -23,16 +28,32 @@ my.test.js
 import { test } from "@cross/test";
 import { assertEquals, assertNotEquals } from "@std/assert";
 
-test("Addition", {}, () => {
-  assertEquals(2 + 3, 5);
-  assertEquals(10 + -5, 5);
+// Simple test
+test("Multiplication", () => {
+  assertEquals(5 * 4, 20);
 });
 
-test("Multiplication", {}, () => {
-  assertNotEquals(5 * 5, 20);
+// Simple test with timeout
+test("Multiplication with timeout", () => {
+  assertEquals(5 * 4, 20);
+}, { timeout: 1000 });
+
+// Test with done callback (useful for async operations)
+test("Async test", (context, done) => {
+   setTimeout(() => {
+     done(); // Signal test completion
+   }, 500); 
+
+   assertEquals(2 + 2, 4); 
 });
 ```
 
 ## Running the tests
 
-Deno: `deno test` Node: `node --test`
+Node:
+
+`node --test`
+
+Deno:
+
+`deno test`

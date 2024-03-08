@@ -33,6 +33,12 @@
     "dependencies": [
       "jsr:@cross/runtime@^0.0.10",
       "jsr:@std/assert@^0.218.2"
-    ]
+    ],
+    "packageJson": {
+      "dependencies": [
+        "npm:@jsr/cross__runtime",
+        "npm:@jsr/std__assert"
+      ]
+    }
   }
 }
