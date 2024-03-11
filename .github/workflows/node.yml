@@ -17,6 +17,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - run: npx jsr add @cross/runtime @std/assert
+      - run: npx jsr add @cross/runtime @std/assert @std/async
+      - run: npm i sinon
       - run: "echo '{ \"type\": \"module\" }' > package.json" # Needed for tsx to work
       - run: npx --yes tsx --test *.test.ts

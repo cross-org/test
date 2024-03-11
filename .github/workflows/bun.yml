@@ -23,6 +23,8 @@ jobs:
           bun-version: ${{ matrix.bun-version }}
           bun-repo: 'oven-sh/bun'
       - name: Install Dependencies
-        run: bun x jsr add @cross/runtime @std/assert
+        run: bun x jsr add @cross/runtime @std/assert @std/async
+      - name: Install Sinon
+        run: bun add sinon
       - name: Test Bun Module
         run: bun test

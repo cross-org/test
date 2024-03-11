@@ -18,3 +18,41 @@ test("Async test", (_context, done) => {
     done(); // Signal test completion
   }, 500);
 }, { waitForCallback: true });
+
+// Test async
+import { delay } from "@std/async";
+test("async hello world", async () => {
+  const x = 1 + 2;
+
+  // await some async task
+  await delay(100);
+
+  if (x !== 3) {
+    throw Error("x should be equal to 3");
+  }
+});
+
+/* Test sinon */
+import sinon from "sinon";
+
+function bar() {/*...*/}
+
+export const funcs = {
+  bar,
+};
+
+// 'foo' no longer takes a parameter, but calls 'bar' from an object
+export function foo() {
+  funcs.bar();
+}
+
+test("calls bar during execution of foo", () => {
+  // create a test spy that wraps 'bar' on the 'funcs' object
+  const spy = sinon.spy(funcs, "bar");
+
+  // call function 'foo' without an argument
+  foo();
+
+  assertEquals(spy.called, true);
+  assertEquals(spy.getCalls().length, 1);
+});

@@ -2,7 +2,7 @@
 
 [![JSR Version](https://jsr.io/badges/@cross/test?v=bust)](https://jsr.io/@cross/test) [![JSR Score](https://jsr.io/badges/@cross/test/score?v=bust)](https://jsr.io/@cross/test/score)
 
-**A minimal testing framework designed for seamless use across Deno, Bun, and Node.js. Works great with @std/assert and @std/expect for assertions.**
+**A minimal testing framework designed for seamless use across Deno, Bun, and Node.js. Works great with @std/assert and @std/expect for assertions, and sinon for spying.**
 
 **Installation**
 
@@ -35,6 +35,32 @@ test("Async test", (_context, done) => {
     done();
   }, 500);
 }, { waitForCallback: true });
+```
+
+**Example with Sinon**
+
+```js
+import { test } from "@cross/test";
+import { assertEquals } from "@std/assert";
+import sinon from "sinon";
+
+// Prepare the "environment"
+function bar() {/*...*/}
+export const funcs = {
+  bar,
+};
+export function foo() {
+  funcs.bar();
+}
+
+test("calls bar during execution of foo", () => {
+  const spy = sinon.spy(funcs, "bar");
+
+  foo();
+
+  assertEquals(spy.called, true);
+  assertEquals(spy.getCalls().length, 1);
+});
 ```
 
 **Running Tests**
