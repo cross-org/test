@@ -2,20 +2,22 @@
 
 [![JSR Version](https://jsr.io/badges/@cross/test?v=bust)](https://jsr.io/@cross/test) [![JSR Score](https://jsr.io/badges/@cross/test/score?v=bust)](https://jsr.io/@cross/test/score)
 
-**A minimal testing framework designed for seamless use across Deno, Bun, and Node.js. Works great with @std/assert and @std/expect for assertions, and sinon for spying.**
+@cross/test is a minimal testing framework designed for seamless use across Deno, Bun, and Node.js. Works great with @std/assert and @std/expect for assertions, and sinon for spying.
 
-**Installation**
+### Installation
 
-1. **Install `@cross/test` and `@std/assert`:**
+Install `@cross/test` along with the assertion library of your choice. We recommend using `@std/assert` for consistency across runtimes:
 
-   ```bash
-   # Pick your runtime and package manager:
-   npx jsr add @cross/test @std/assert  # Node.js
-   deno add @cross/test @std/assert     # Deno
-   bunx jsr add @cross/test @std/assert # Bun
-   ```
+```bash
+# Pick your runtime and package manager:
+npx jsr add @cross/test @std/assert  # Node.js
+deno add @cross/test @std/assert     # Deno
+bunx jsr add @cross/test @std/assert # Bun
+```
 
-**Example**
+### Examples
+
+#### Assertions using @std/assert
 
 ```javascript
 import { test } from "@cross/test";
@@ -37,7 +39,7 @@ test("Async test", (_context, done) => {
 }, { waitForCallback: true });
 ```
 
-**Example with Sinon**
+#### Spying, mocking and stubbing using sinon
 
 ```js
 import { test } from "@cross/test";
@@ -63,20 +65,14 @@ test("calls bar during execution of foo", () => {
 });
 ```
 
-**Running Tests**
+### Running the tests
 
-- **Directly in your runtime:**
-  - **Node.js:** `node --test`
-  - **Node.js (TS):** `npx tsx --test` _Make sure to use `{ "type": "module" }` to be able to use tsx with `@cross/test`_
-  - **Deno:** `deno test`
-  - **Bun:** `bun test`
+- **Node.js:** `node --test`
+- **Node.js (TS):** `npx tsx --test` _Remember `{ "type": "module" }` in package.json_
+- **Deno:** `deno test`
+- **Bun:** `bun test`
 
-**CI Integration**
-
-To avoid cluttering with unnessecary files, use CI to test Node and Bun if you develop using Deno, and vice versa. Below is some example on `.github/workflows/runtime.yml` for automated testing on
-GitHub.
-
-**Example CI Configurations**
+### Configuring CI
 
 - **Bun (GitHub Actions):**
 
