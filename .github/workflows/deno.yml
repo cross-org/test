@@ -27,3 +27,6 @@ jobs:
 
       - name: Check types
         run: deno check mod.ts
+
+      - name: Run tests
+        run: deno test
