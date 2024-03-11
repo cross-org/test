@@ -17,7 +17,12 @@ jobs:
     steps:
       - name: Git Checkout
         uses: actions/checkout@v3
+      - name: Use Bun Version ${{ matrix.bun-version }}
+        uses: antongolub/action-setup-bun@v1.12.8
+        with:
+          bun-version: ${{ matrix.bun-version }}
+          bun-repo: 'oven-sh/bun'
       - name: Install Dependencies
-        run: bunx jsr add @cross/test @std/assert
+        run: bun x jsr add @cross/runtime @cross/test @std/assert
       - name: Test Bun Module
         run: bun test
