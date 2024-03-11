@@ -114,5 +114,5 @@ jobs:
       - uses: actions/checkout@v3
       - run: npx jsr add @cross/test @std/assert
       - run: "echo '{ \"type\": \"module\" }' > package.json" # Needed for tsx to work
-      - run: npx tsx --test
+      - run: npx --yes tsx --test
 ```
