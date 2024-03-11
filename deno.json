@@ -5,7 +5,5 @@
   "fmt": {
     "lineWidth": 200
   },
-  "imports": {
-    "@cross/runtime": "jsr:@cross/runtime@^0.0.10"
-  }
+  "imports": { "@cross/runtime": "jsr:@cross/runtime@^0.0.17" }
 }

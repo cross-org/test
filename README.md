@@ -41,6 +41,7 @@ test("Async test", (_context, done) => {
 
 - **Directly in your runtime:**
   - **Node.js:** `node --test`
+  - **Node.js (TS):** `npx tsx --test` <- Make sure to use `{ "type": "module" }` to be able to use tsx with `@cross/test`
   - **Deno:** `deno test`
   - **Bun:** `bun test`
 
