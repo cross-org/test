@@ -20,6 +20,12 @@ Deno:
 deno add @cross/test @std/assert
 ```
 
+Bun:
+
+```
+bunx jsr add @cross/test @std/assert
+```
+
 ## Example
 
 my.test.js
@@ -38,14 +44,13 @@ test("Multiplication with timeout", () => {
   assertEquals(5 * 4, 20);
 }, { timeout: 1000 });
 
-// Test with done callback (useful for async operations)
-test("Async test", (context, done) => {
-   setTimeout(() => {
-     done(); // Signal test completion
-   }, 500); 
-
-   assertEquals(2 + 2, 4); 
-});
+// Test with completion callback
+test("Async test", (_context, done) => {
+  setTimeout(() => {
+    assertNotEquals(5, 4);
+    done(); // Signal test completion
+  }, 500);
+}, { waitForCallback: true });
 ```
 
 ## Running the tests
@@ -57,3 +62,7 @@ Node:
 Deno:
 
 `deno test`
+
+Bun:
+
+`bun test`

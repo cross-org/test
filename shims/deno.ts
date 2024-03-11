@@ -7,8 +7,11 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
     async fn(context) {
       // Adapt the context here
       let testFnPromise = undefined;
-      const callbackPromise = new Promise((resolve, reject) => { 
-          testFnPromise = testFn(context, (e) => { if (e) { reject(e) } else { resolve(0) }});
+      const callbackPromise = new Promise((resolve, reject) => {
+        testFnPromise = testFn(context, (e) => {
+          if (e) reject(e);
+          else resolve(0);
+        });
       });
       let timeoutId: number = -1; // Store the timeout ID
       try {

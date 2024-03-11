@@ -2,15 +2,18 @@ import { test } from "bun:test";
 import { TestSubject, WrappedTestOptions } from "../mod.ts";
 
 export async function wrappedTest(
-  name: string, 
-  testFn: TestSubject, 
-  options: WrappedTestOptions
+  name: string,
+  testFn: TestSubject,
+  options: WrappedTestOptions,
 ) {
-  return await test(name, async () => { 
+  return await test(name, async () => {
     // Adapt the context here
     let testFnPromise = undefined;
-    const callbackPromise = new Promise((resolve, reject) => { 
-      testFnPromise = testFn(undefined, (e) => { if (e) { reject(e) } else { resolve(0) }});
+    const callbackPromise = new Promise((resolve, reject) => {
+      testFnPromise = testFn(undefined, (e) => {
+        if (e) reject(e);
+        else resolve(0);
+      });
     });
     let timeoutId: number = -1; // Store the timeout ID
     try {
@@ -24,14 +27,14 @@ export async function wrappedTest(
       } else {
         // No timeout, just await testFn
         await options.waitForCallback ? callbackPromise : testFnPromise;
-      } 
+      }
     } catch (error) {
       throw error;
     } finally {
-      if (timeoutId) clearTimeout(timeoutId); 
+      if (timeoutId) clearTimeout(timeoutId);
       // Make sure testFnPromise has completed
       await testFnPromise;
       if (options.waitForCallback) await callbackPromise;
     }
-  }); 
+  });
 }

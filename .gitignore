@@ -134,3 +134,4 @@ deno.lock
 bun.lockb
 package.json
 bunfig.toml
+package-lock.json
