@@ -41,7 +41,7 @@ test("Async test", (_context, done) => {
 
 - **Directly in your runtime:**
   - **Node.js:** `node --test`
-  - **Node.js (TS):** `npx tsx --test` <- Make sure to use `{ "type": "module" }` to be able to use tsx with `@cross/test`
+  - **Node.js (TS):** `npx tsx --test` _Make sure to use `{ "type": "module" }` to be able to use tsx with `@cross/test`_
   - **Deno:** `deno test`
   - **Bun:** `bun test`
 
@@ -88,4 +88,31 @@ jobs:
           deno-version: v1.x # Uses latest deno version 1 
       - run: deno add @cross/test @std/assert # Installs dependencies from jsr.io
       - run: deno test  # Runs tests
+```
+
+- **Node (GitHub actions):**
+
+```yaml
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 21.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: npx jsr add @cross/test @std/assert
+      - run: "echo '{ \"type\": \"module\" }' > package.json" # Needed for tsx to work
+      - run: npx tsx --test
 ```
