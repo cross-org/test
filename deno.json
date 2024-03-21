@@ -5,5 +5,8 @@
   "fmt": {
     "lineWidth": 200
   },
-  "imports": { "@cross/runtime": "jsr:@cross/runtime@^0.0.17", "@std/assert": "jsr:@std/assert@^0.219.1", "@std/async": "jsr:@std/async@^0.219.1", "sinon": "npm:sinon@^17.0.1" }
+  "imports": { "@cross/runtime": "jsr:@cross/runtime@^1.0.0", "@std/assert": "jsr:@std/assert@^0.219.1", "@std/async": "jsr:@std/async@^0.219.1", "sinon": "npm:sinon@^17.0.1" },
+  "publish": {
+    "exclude": [".github", "*.test.ts"]
+  }
 }
