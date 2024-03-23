@@ -2,7 +2,7 @@
 
 [![JSR Version](https://jsr.io/badges/@cross/test?v=bust)](https://jsr.io/@cross/test) [![JSR Score](https://jsr.io/badges/@cross/test/score?v=bust)](https://jsr.io/@cross/test/score)
 
-@cross/test is a minimal testing framework designed for seamless use across Deno, Bun, and Node.js. Works great with @std/assert and @std/expect for assertions, and sinon for spying.
+@cross/test is a minimal testing framework designed for seamless use across Deno, Bun, and Node.js. Works great with @std/assert and @std/expect for assertions, and sinon for spying. Part of the @cross suite - check out our growing collection of cross-runtime tools at [github.com/cross-org](https://github.com/cross-org).
 
 ### Installation
 
