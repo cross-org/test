@@ -1,6 +1,7 @@
-import { TestSubject, WrappedTestOptions } from "../mod.ts"; // Assuming cross runtime types are here
+import type { TestSubject, WrappedTestOptions } from "../mod.ts"; // Assuming cross runtime types are here
 
 export function wrappedTest(name: string, testFn: TestSubject, options: WrappedTestOptions) {
+  // @ts-ignore The Deno namespace isn't available in Node or Bun
   Deno.test({
     name,
     ignore: options?.skip || false,

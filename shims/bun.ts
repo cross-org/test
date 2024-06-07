@@ -1,5 +1,5 @@
 import { test } from "bun:test";
-import { TestSubject, WrappedTestOptions } from "../mod.ts";
+import type { TestSubject, WrappedTestOptions } from "../mod.ts";
 
 export async function wrappedTest(
   name: string,

@@ -1,6 +1,6 @@
 import { test } from "node:test"; // For type safety
-import { WrappedTestOptions } from "../mod.ts"; //  Shared options
-import { TestSubject } from "../mod.ts";
+import type { WrappedTestOptions } from "../mod.ts"; //  Shared options
+import type { TestSubject } from "../mod.ts";
 
 function transformOptions(options?: WrappedTestOptions) {
   return {
