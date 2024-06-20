@@ -1,4 +1,3 @@
-import { test } from "bun:test";
 import type { TestSubject, WrappedTestOptions } from "../mod.ts";
 
 export async function wrappedTest(
@@ -6,6 +5,7 @@ export async function wrappedTest(
   testFn: TestSubject,
   options: WrappedTestOptions,
 ) {
+  const { test } = await import("bun:test");
   return await test(name, async () => {
     // Adapt the context here
     let testFnPromise = undefined;
