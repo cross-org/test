@@ -1,0 +1,23 @@
+on: 
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  deno_ci:
+    uses: cross-org/workflows/.github/workflows/deno-ci.yml@main
+    with:
+      entrypoint: mod.ts
+      lint_docs: false
+  bun_ci:
+    uses: cross-org/workflows/.github/workflows/bun-ci.yml@main
+    with:
+      jsr_dependencies: "@std/assert @std/async @cross/runtime"
+      npm_dependencies: "sinon"
+  node_ci:
+    uses: cross-org/workflows/.github/workflows/node-ci.yml@main
+    with:
+      test_target: "*.test.ts"
+      jsr_dependencies: "@std/assert @std/async @cross/runtime"
+      npm_dependencies: "sinon"

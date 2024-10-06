@@ -1,5 +1,6 @@
 import { test } from "./mod.ts";
 import { assertEquals, assertNotEquals } from "@std/assert";
+import { delay } from "@std/async";
 
 // Simple test
 test("Multiplication", () => {
@@ -11,16 +12,23 @@ test("Multiplication with timeout", () => {
   assertEquals(5 * 4, 20);
 }, { timeout: 1000 });
 
-// Test with done callback (useful for async operations)
-test("Async test", (_context, done) => {
+// Failing async test with done callback
+test("Long async test", (_context, done) => {
   setTimeout(() => {
     assertNotEquals(5, 4);
     done(); // Signal test completion
   }, 500);
 }, { waitForCallback: true });
 
+// Test with done callback (useful for async operations)
+test("Async test", (_context, done) => {
+  setTimeout(() => {
+    assertNotEquals(5, 4);
+    done(); // Signal test completion
+  }, 4500);
+}, { waitForCallback: true, timeout: 5500 });
+
 // Test async
-import { delay } from "@std/async";
 test("async hello world", async () => {
   const x = 1 + 2;
 
