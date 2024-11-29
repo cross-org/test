@@ -5,7 +5,12 @@
   "fmt": {
     "lineWidth": 200
   },
-  "imports": { "@cross/runtime": "jsr:@cross/runtime@^1.0.0", "@std/assert": "jsr:@std/assert@^0.226.0", "@std/async": "jsr:@std/async@^0.224.2", "sinon": "npm:sinon@^18.0.0" },
+  "imports": {
+    "@cross/runtime": "jsr:@cross/runtime@~1.0.0",
+    "@std/assert": "jsr:@std/assert@~1.0.8",
+    "@std/async": "jsr:@std/async@~1.0.9",
+    "sinon": "npm:sinon@~19.0.2"
+  },
   "publish": {
     "exclude": [".github", "*.test.ts"]
   }

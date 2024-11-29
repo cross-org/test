@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: antongolub/action-setup-bun@v1.12.8 
+      - uses: antongolub/action-setup-bun@v1.12.8
         with:
           bun-version: v1.x # Uses latest bun 1
       - run: bun x jsr add @cross/test @std/assert # Installs dependencies
@@ -108,9 +108,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.x # Uses latest deno version 1 
+          deno-version: v1.x # Uses latest deno version 1
       - run: deno add @cross/test @std/assert # Installs dependencies from jsr.io
-      - run: deno test  # Runs tests
+      - run: deno test # Runs tests
 ```
 
 - **Node (GitHub actions):**
@@ -120,13 +120,12 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
