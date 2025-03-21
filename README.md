@@ -12,7 +12,7 @@ Install `@cross/test` along with the assertion library of your choice. We recomm
 ```bash
 # Pick your runtime and package manager:
 npx jsr add @cross/test @std/assert  # Node.js
-deno add @cross/test @std/assert     # Deno
+deno add jsr:@cross/test jsr:@std/assert     # Deno
 bunx jsr add @cross/test @std/assert # Bun
 ```
 
