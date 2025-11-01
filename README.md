@@ -9,12 +9,11 @@ A minimal, focused testing framework for writing tests that run identically acro
 
 While `node:test` now works across runtimes, @cross/test provides unique advantages:
 
-- **🎯 Unified Simple API** - Single `test()` function with consistent behavior across all runtimes, no `describe`/`it` complexity
-- **📦 JSR-First** - Seamlessly works with JSR packages like `@std/assert` and `@std/expect`
-- **🪜 Test Steps** - Built-in `context.step()` support for organizing tests into sequential steps with shared state
-- **🔄 Callback Support** - Native `waitForCallback` option for callback-based async tests
-- **🎨 Minimal Surface** - Focused API that abstracts runtime differences without bloat
-- **🔌 Runtime Detection** - Automatic runtime detection via `@cross/runtime`
+- **Unified Simple API** - Single `test()` function with consistent behavior across all runtimes
+- **JSR-First** - Seamlessly works with JSR packages like `@std/assert` and `@std/expect`
+- **Test Steps** - Built-in `context.step()` support for organizing tests into sequential steps with shared state
+- **Callback Support** - Native `waitForCallback` option for callback-based async tests
+- **Minimal Surface** - Focused API that abstracts runtime differences without bloat
 
 ### Installation
 
