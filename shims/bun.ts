@@ -10,9 +10,9 @@ export async function wrappedTest(
     // Create wrapped context with step method
     const wrappedContext: TestContext = {
       step: async (stepName: string, stepFn: () => void | Promise<void>) => {
-        // Bun supports nested tests using test() inside another test
-        // We can use test() directly as it will be nested
-        return await test(stepName, stepFn);
+        // Bun doesn't support nested tests like Deno, so we run steps inline
+        // We could log the step name for debugging if needed
+        return await stepFn();
       },
     };
 
