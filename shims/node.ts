@@ -44,7 +44,8 @@ export function wrappedTest(
         // Node.js supports nested tests via test() within a test callback
         // Use context.test() if available (Node 18.17.0+), otherwise use global test()
         if (context && typeof context.test === "function") {
-          return await context.test(stepName, async (nestedContext) => {
+          // deno-lint-ignore no-explicit-any
+          return await context.test(stepName, async (nestedContext: any) => {
             if (isSimpleFunction && !isCallbackFunction) {
               // Simple function without context or callback
               await (stepFn as SimpleStepFunction)();
@@ -103,7 +104,8 @@ export function wrappedTest(
           const isNestedCallback = nestedStepOptions?.waitForCallback === true;
 
           if (nodeContext && typeof nodeContext.test === "function") {
-            return await nodeContext.test(nestedStepName, async (deeperContext) => {
+            // deno-lint-ignore no-explicit-any
+            return await nodeContext.test(nestedStepName, async (deeperContext: any) => {
               if (isNestedSimple && !isNestedCallback) {
                 await (nestedStepFn as SimpleStepFunction)();
               } else if (isNestedContext) {
