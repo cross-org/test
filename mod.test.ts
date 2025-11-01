@@ -64,3 +64,40 @@ test("calls bar during execution of foo", () => {
   assertEquals(spy.called, true);
   assertEquals(spy.getCalls().length, 1);
 });
+
+// Test with nested steps
+test("Parent test with nested steps", async (context) => {
+  const results: number[] = [];
+  
+  await context.step("Step 1: Initialize", () => {
+    results.push(1);
+    assertEquals(results.length, 1);
+  });
+  
+  await context.step("Step 2: Add more data", () => {
+    results.push(2);
+    assertEquals(results.length, 2);
+  });
+  
+  await context.step("Step 3: Verify final state", () => {
+    results.push(3);
+    assertEquals(results, [1, 2, 3]);
+  });
+});
+
+// Test with async nested steps
+test("Async parent test with nested steps", async (context) => {
+  let counter = 0;
+  
+  await context.step("Async step 1", async () => {
+    await delay(10);
+    counter++;
+    assertEquals(counter, 1);
+  });
+  
+  await context.step("Async step 2", async () => {
+    await delay(10);
+    counter++;
+    assertEquals(counter, 2);
+  });
+});
