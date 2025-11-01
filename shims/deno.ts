@@ -10,7 +10,7 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
       const wrappedContext: TestContext = {
         step: async (stepName: string, stepFn: () => void | Promise<void>) => {
           // @ts-ignore context.step exists in Deno
-          return await context.step(stepName, stepFn);
+          await context.step(stepName, stepFn);
         },
       };
 
