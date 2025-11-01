@@ -6,6 +6,11 @@ import { CurrentRuntime, Runtime } from "@cross/runtime";
 export type SimpleStepFunction = () => void | Promise<void>;
 
 /**
+ * Context step function - function with context parameter for nested steps
+ */
+export type ContextStepFunction = (context: TestContext) => void | Promise<void>;
+
+/**
  * Step subject - the function executed within a step with context and callback support
  */
 export type StepSubject = (context: TestContext, done: (value?: unknown) => void) => void | Promise<void>;
@@ -18,10 +23,11 @@ export interface StepOptions {
 }
 
 /**
- * Step function for nested tests - supports both simple functions and functions with context/callback
+ * Step function for nested tests - supports simple functions, context functions, and callback functions
  */
 export type StepFunction = {
   (name: string, fn: SimpleStepFunction): Promise<void>;
+  (name: string, fn: ContextStepFunction): Promise<void>;
   (name: string, fn: StepSubject, options: StepOptions): Promise<void>;
 };
 

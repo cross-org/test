@@ -142,3 +142,78 @@ test("Test with multiple callback-based steps", async (context) => {
     assertEquals(results, [1, 2]);
   });
 });
+
+// Test two-level nesting (steps within steps)
+test("Two-level nested steps", async (context) => {
+  let counter = 0;
+
+  await context.step("Level 1", async (context: import("./mod.ts").TestContext) => {
+    counter++;
+    assertEquals(counter, 1);
+
+    await context.step("Level 2 - step 1", () => {
+      counter++;
+      assertEquals(counter, 2);
+    });
+
+    await context.step("Level 2 - step 2", () => {
+      counter++;
+      assertEquals(counter, 3);
+    });
+  });
+
+  assertEquals(counter, 3);
+});
+
+// Test three-level nesting
+test("Three-level nested steps", async (context) => {
+  let counter = 0;
+
+  await context.step("Level 1", async (context: import("./mod.ts").TestContext) => {
+    counter++;
+    assertEquals(counter, 1);
+
+    await context.step("Level 2", async (context: import("./mod.ts").TestContext) => {
+      counter++;
+      assertEquals(counter, 2);
+
+      await context.step("Level 3", () => {
+        counter++;
+        assertEquals(counter, 3);
+      });
+    });
+  });
+
+  assertEquals(counter, 3);
+});
+
+// Test complex nested hierarchy with multiple branches
+test("Complex nested hierarchy", async (context) => {
+  const visited: string[] = [];
+
+  await context.step("Root", async (context: import("./mod.ts").TestContext) => {
+    visited.push("root");
+
+    await context.step("Branch A", async (context: import("./mod.ts").TestContext) => {
+      visited.push("a");
+
+      await context.step("Branch A1", () => {
+        visited.push("a1");
+      });
+
+      await context.step("Branch A2", () => {
+        visited.push("a2");
+      });
+    });
+
+    await context.step("Branch B", async (context: import("./mod.ts").TestContext) => {
+      visited.push("b");
+
+      await context.step("Branch B1", () => {
+        visited.push("b1");
+      });
+    });
+  });
+
+  assertEquals(visited, ["root", "a", "a1", "a2", "b", "b1"]);
+});
