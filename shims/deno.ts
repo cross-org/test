@@ -1,4 +1,4 @@
-import type { SimpleStepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "../mod.ts"; // Assuming cross runtime types are here
+import type { ContextStepFunction, SimpleStepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "../mod.ts"; // Assuming cross runtime types are here
 
 export function wrappedTest(name: string, testFn: TestSubject, options: WrappedTestOptions): Promise<void> {
   // @ts-ignore The Deno namespace isn't available in Node or Bun
@@ -9,7 +9,7 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
       // Create wrapped context with step method
       const wrappedContext: TestContext = {
         // deno-lint-ignore no-explicit-any
-        step: async (stepName: string, stepFn: SimpleStepFunction | StepSubject, stepOptions?: StepOptions): Promise<any> => {
+        step: async (stepName: string, stepFn: SimpleStepFunction | ContextStepFunction | StepSubject, stepOptions?: StepOptions): Promise<any> => {
           // Check function arity to determine how to handle it:
           // - length 0: Simple function with no parameters
           // - length 1: Function with context parameter for nesting
@@ -49,7 +49,7 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
       function createNestedContext(denoContext: any): TestContext {
         return {
           // deno-lint-ignore no-explicit-any
-          step: async (nestedStepName: string, nestedStepFn: SimpleStepFunction | StepSubject, nestedStepOptions?: StepOptions): Promise<any> => {
+          step: async (nestedStepName: string, nestedStepFn: SimpleStepFunction | ContextStepFunction | StepSubject, nestedStepOptions?: StepOptions): Promise<any> => {
             const isNestedSimple = nestedStepFn.length === 0;
             const isNestedContext = nestedStepFn.length === 1 && !nestedStepOptions?.waitForCallback;
             const isNestedCallback = nestedStepOptions?.waitForCallback === true;

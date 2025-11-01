@@ -1,5 +1,5 @@
 import { test } from "node:test"; // For type safety
-import type { SimpleStepFunction, StepOptions, StepSubject, TestContext, WrappedTestOptions } from "../mod.ts"; //  Shared options
+import type { ContextStepFunction, SimpleStepFunction, StepOptions, StepSubject, TestContext, WrappedTestOptions } from "../mod.ts"; //  Shared options
 import type { TestSubject } from "../mod.ts";
 
 function transformOptions(options?: WrappedTestOptions) {
@@ -32,7 +32,7 @@ export function wrappedTest(
     // Create wrapped context with step method
     const wrappedContext: TestContext = {
       // deno-lint-ignore no-explicit-any
-      step: async (stepName: string, stepFn: SimpleStepFunction | StepSubject, stepOptions?: StepOptions): Promise<any> => {
+      step: async (stepName: string, stepFn: SimpleStepFunction | ContextStepFunction | StepSubject, stepOptions?: StepOptions): Promise<any> => {
         // Check function arity to determine how to handle it:
         // - length 0: Simple function with no parameters
         // - length 1: Function with context parameter for nesting
@@ -98,7 +98,7 @@ export function wrappedTest(
     function createNestedContext(nodeContext: any): TestContext {
       return {
         // deno-lint-ignore no-explicit-any
-        step: async (nestedStepName: string, nestedStepFn: SimpleStepFunction | StepSubject, nestedStepOptions?: StepOptions): Promise<any> => {
+        step: async (nestedStepName: string, nestedStepFn: SimpleStepFunction | ContextStepFunction | StepSubject, nestedStepOptions?: StepOptions): Promise<any> => {
           const isNestedSimple = nestedStepFn.length === 0;
           const isNestedContext = nestedStepFn.length === 1 && !nestedStepOptions?.waitForCallback;
           const isNestedCallback = nestedStepOptions?.waitForCallback === true;

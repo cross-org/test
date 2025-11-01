@@ -1,5 +1,5 @@
 import { test } from "bun:test";
-import type { SimpleStepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "../mod.ts";
+import type { ContextStepFunction, SimpleStepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "../mod.ts";
 
 export async function wrappedTest(
   name: string,
@@ -10,7 +10,7 @@ export async function wrappedTest(
     // Create wrapped context with step method
     const wrappedContext: TestContext = {
       // deno-lint-ignore no-explicit-any
-      step: async (_stepName: string, stepFn: SimpleStepFunction | StepSubject, stepOptions?: StepOptions): Promise<any> => {
+      step: async (_stepName: string, stepFn: SimpleStepFunction | ContextStepFunction | StepSubject, stepOptions?: StepOptions): Promise<any> => {
         // Bun doesn't support nested tests like Deno, so we run steps inline
         // We could log the step name for debugging if needed
 
@@ -49,7 +49,7 @@ export async function wrappedTest(
     function createNestedContext(): TestContext {
       return {
         // deno-lint-ignore no-explicit-any
-        step: async (_nestedStepName: string, nestedStepFn: SimpleStepFunction | StepSubject, nestedStepOptions?: StepOptions): Promise<any> => {
+        step: async (_nestedStepName: string, nestedStepFn: SimpleStepFunction | ContextStepFunction | StepSubject, nestedStepOptions?: StepOptions): Promise<any> => {
           const isNestedSimple = nestedStepFn.length === 0;
           const isNestedContext = nestedStepFn.length === 1 && !nestedStepOptions?.waitForCallback;
           const isNestedCallback = nestedStepOptions?.waitForCallback === true;
