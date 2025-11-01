@@ -1,6 +1,6 @@
 {
   "name": "@cross/test",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "exports": "./mod.ts",
   "fmt": {
     "lineWidth": 200

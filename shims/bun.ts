@@ -1,5 +1,5 @@
 import { test } from "bun:test";
-import type { TestContext, TestSubject, WrappedTestOptions, StepSubject, StepOptions, SimpleStepFunction } from "../mod.ts";
+import type { SimpleStepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "../mod.ts";
 
 export async function wrappedTest(
   name: string,
@@ -36,9 +36,9 @@ export async function wrappedTest(
               } else {
                 // Simplified context for deeply nested callback steps (level 3+)
                 // Deep nesting is rare; most use cases need only one level of callback steps
-                const nestedContext: TestContext = { 
+                const nestedContext: TestContext = {
                   // deno-lint-ignore no-explicit-any
-                  step: async (): Promise<any> => {} 
+                  step: async (): Promise<any> => {},
                 };
                 let nestedStepFnPromise = undefined;
                 const nestedCallbackPromise = new Promise((resolve, reject) => {

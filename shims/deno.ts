@@ -1,4 +1,4 @@
-import type { TestContext, TestSubject, WrappedTestOptions, StepSubject, StepOptions, SimpleStepFunction } from "../mod.ts"; // Assuming cross runtime types are here
+import type { SimpleStepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "../mod.ts"; // Assuming cross runtime types are here
 
 export function wrappedTest(name: string, testFn: TestSubject, options: WrappedTestOptions): Promise<void> {
   // @ts-ignore The Deno namespace isn't available in Node or Bun
@@ -36,9 +36,9 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
                     } else {
                       // Simplified context for deeply nested callback steps (level 3+)
                       // Deep nesting is rare; most use cases need only one level of callback steps
-                      const nestedContext: TestContext = { 
+                      const nestedContext: TestContext = {
                         // deno-lint-ignore no-explicit-any
-                        step: async (): Promise<any> => {} 
+                        step: async (): Promise<any> => {},
                       };
                       let nestedStepFnPromise = undefined;
                       const nestedCallbackPromise = new Promise((resolve, reject) => {

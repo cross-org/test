@@ -1,5 +1,5 @@
 import { test } from "node:test"; // For type safety
-import type { TestContext, WrappedTestOptions, StepSubject, StepOptions, SimpleStepFunction } from "../mod.ts"; //  Shared options
+import type { SimpleStepFunction, StepOptions, StepSubject, TestContext, WrappedTestOptions } from "../mod.ts"; //  Shared options
 import type { TestSubject } from "../mod.ts";
 
 function transformOptions(options?: WrappedTestOptions) {
@@ -48,9 +48,9 @@ export function wrappedTest(
                       } else {
                         // Simplified context for deeply nested callback steps (level 3+)
                         // Deep nesting is rare; most use cases need only one level of callback steps
-                        const nestedContext: TestContext = { 
+                        const nestedContext: TestContext = {
                           // deno-lint-ignore no-explicit-any
-                          step: async (): Promise<any> => {} 
+                          step: async (): Promise<any> => {},
                         };
                         let nestedStepFnPromise = undefined;
                         const nestedCallbackPromise = new Promise((resolve, reject) => {
@@ -73,9 +73,9 @@ export function wrappedTest(
                     } else {
                       // Simplified context for deeply nested callback steps (level 3+)
                       // Deep nesting is rare; most use cases need only one level of callback steps
-                      const nestedContext: TestContext = { 
+                      const nestedContext: TestContext = {
                         // deno-lint-ignore no-explicit-any
-                        step: async (): Promise<any> => {} 
+                        step: async (): Promise<any> => {},
                       };
                       let nestedStepFnPromise = undefined;
                       const nestedCallbackPromise = new Promise((resolve, reject) => {
@@ -110,9 +110,9 @@ export function wrappedTest(
             await (stepFn as SimpleStepFunction)();
           } else {
             // Callback-based function
-            const nestedWrappedContext: TestContext = { 
+            const nestedWrappedContext: TestContext = {
               // deno-lint-ignore no-explicit-any
-              step: async (): Promise<any> => {} 
+              step: async (): Promise<any> => {},
             };
             let stepFnPromise = undefined;
             const stepCallbackPromise = new Promise((resolve, reject) => {
