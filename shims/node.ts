@@ -13,7 +13,7 @@ export function wrappedTest(
   name: string,
   testFn: TestSubject,
   options: WrappedTestOptions,
-) {
+): Promise<void> {
   // deno-lint-ignore no-explicit-any
   test(name, transformOptions(options), async (context: any) => {
     // Create wrapped context with step method
@@ -41,4 +41,5 @@ export function wrappedTest(
     if (options.waitForCallback) await callbackPromise;
     await testFnPromise;
   });
+  return Promise.resolve();
 }

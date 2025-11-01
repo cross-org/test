@@ -5,7 +5,7 @@ export async function wrappedTest(
   name: string,
   testFn: TestSubject,
   options: WrappedTestOptions,
-) {
+): Promise<void> {
   return await test(name, async () => {
     // Create wrapped context with step method
     const wrappedContext: TestContext = {
