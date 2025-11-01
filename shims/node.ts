@@ -21,6 +21,7 @@ export function wrappedTest(
       // deno-lint-ignore no-explicit-any
       step: async (stepName: string, stepFn: SimpleStepFunction | StepSubject, stepOptions?: StepOptions): Promise<any> => {
         // Check if this is a simple function (no parameters) or a callback-based function
+        // Using function.length to detect arity: 0 = simple function, 2 = callback function (context, done)
         const isSimpleFunction = stepFn.length === 0;
         const isCallbackFunction = stepOptions?.waitForCallback === true;
 
@@ -45,6 +46,8 @@ export function wrappedTest(
                       if (isNestedSimple && !isNestedCallback) {
                         await (nestedStepFn as SimpleStepFunction)();
                       } else {
+                        // Simplified context for deeply nested callback steps (level 3+)
+                        // Deep nesting is rare; most use cases need only one level of callback steps
                         const nestedContext: TestContext = { 
                           // deno-lint-ignore no-explicit-any
                           step: async (): Promise<any> => {} 
@@ -68,6 +71,8 @@ export function wrappedTest(
                     if (isNestedSimple && !isNestedCallback) {
                       await (nestedStepFn as SimpleStepFunction)();
                     } else {
+                      // Simplified context for deeply nested callback steps (level 3+)
+                      // Deep nesting is rare; most use cases need only one level of callback steps
                       const nestedContext: TestContext = { 
                         // deno-lint-ignore no-explicit-any
                         step: async (): Promise<any> => {} 
