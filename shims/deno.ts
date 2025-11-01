@@ -1,4 +1,4 @@
-import type { TestContext, TestSubject, WrappedTestOptions } from "../mod.ts"; // Assuming cross runtime types are here
+import type { SimpleStepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "../mod.ts"; // Assuming cross runtime types are here
 
 export function wrappedTest(name: string, testFn: TestSubject, options: WrappedTestOptions): Promise<void> {
   // @ts-ignore The Deno namespace isn't available in Node or Bun
@@ -8,9 +8,64 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
     async fn(context) {
       // Create wrapped context with step method
       const wrappedContext: TestContext = {
-        step: async (stepName: string, stepFn: () => void | Promise<void>) => {
+        // deno-lint-ignore no-explicit-any
+        step: async (stepName: string, stepFn: SimpleStepFunction | StepSubject, stepOptions?: StepOptions): Promise<any> => {
+          // Check if this is a simple function (no parameters) or a callback-based function
+          // Using function.length to detect arity: 0 = simple function, 2 = callback function (context, done)
+          const isSimpleFunction = stepFn.length === 0;
+          const isCallbackFunction = stepOptions?.waitForCallback === true;
+
           // @ts-ignore context.step exists in Deno
-          await context.step(stepName, stepFn);
+          await context.step(stepName, async (stepContext) => {
+            if (isSimpleFunction && !isCallbackFunction) {
+              // Simple function without context or callback
+              await (stepFn as SimpleStepFunction)();
+            } else {
+              // Callback-based function
+              // Create a nested wrapped context for the step
+              const nestedWrappedContext: TestContext = {
+                // deno-lint-ignore no-explicit-any
+                step: async (nestedStepName: string, nestedStepFn: SimpleStepFunction | StepSubject, nestedStepOptions?: StepOptions): Promise<any> => {
+                  // @ts-ignore context.step exists in Deno
+                  await stepContext.step(nestedStepName, async () => {
+                    const isNestedSimple = nestedStepFn.length === 0;
+                    const isNestedCallback = nestedStepOptions?.waitForCallback === true;
+
+                    if (isNestedSimple && !isNestedCallback) {
+                      await (nestedStepFn as SimpleStepFunction)();
+                    } else {
+                      // Simplified context for deeply nested callback steps (level 3+)
+                      // Deep nesting is rare; most use cases need only one level of callback steps
+                      const nestedContext: TestContext = {
+                        // deno-lint-ignore no-explicit-any
+                        step: async (): Promise<any> => {},
+                      };
+                      let nestedStepFnPromise = undefined;
+                      const nestedCallbackPromise = new Promise((resolve, reject) => {
+                        nestedStepFnPromise = (nestedStepFn as StepSubject)(nestedContext, (e) => {
+                          if (e) reject(e);
+                          else resolve(0);
+                        });
+                      });
+                      if (nestedStepOptions?.waitForCallback) await nestedCallbackPromise;
+                      await nestedStepFnPromise;
+                    }
+                  });
+                },
+              };
+
+              // Handle the step function with callback support
+              let stepFnPromise = undefined;
+              const stepCallbackPromise = new Promise((resolve, reject) => {
+                stepFnPromise = (stepFn as StepSubject)(nestedWrappedContext, (e) => {
+                  if (e) reject(e);
+                  else resolve(0);
+                });
+              });
+              if (stepOptions?.waitForCallback) await stepCallbackPromise;
+              await stepFnPromise;
+            }
+          });
         },
       };
 

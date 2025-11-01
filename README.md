@@ -81,6 +81,28 @@ test("User registration flow", async (context) => {
 
 Steps share the parent test's scope and execute sequentially, making complex test flows easy to write and debug.
 
+#### Callback support in test steps
+
+Just like tests, steps can also use callbacks for async operations with the `waitForCallback` option:
+
+```javascript
+import { test } from "@cross/test";
+import { assertEquals } from "@std/assert";
+
+test("Test with callback-based steps", async (context) => {
+  let completed = false;
+
+  await context.step("Async operation", (_context, done) => {
+    setTimeout(() => {
+      completed = true;
+      done();
+    }, 100);
+  }, { waitForCallback: true });
+
+  assertEquals(completed, true);
+});
+```
+
 #### Spying, mocking and stubbing using sinon
 
 ```js
