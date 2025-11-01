@@ -25,12 +25,10 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
               await (stepFn as SimpleStepFunction)();
             } else if (isContextFunction) {
               // Function with context parameter - create proper nested context
-              // deno-lint-ignore no-explicit-any
               const nestedWrappedContext: TestContext = createNestedContext(stepContext);
               await (stepFn as (context: TestContext) => void | Promise<void>)(nestedWrappedContext);
             } else {
               // Callback-based function
-              // deno-lint-ignore no-explicit-any
               const nestedWrappedContext: TestContext = createNestedContext(stepContext);
               let stepFnPromise = undefined;
               const stepCallbackPromise = new Promise((resolve, reject) => {

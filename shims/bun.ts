@@ -46,7 +46,6 @@ export async function wrappedTest(
     };
 
     // Helper function to create nested context with proper step support
-    // deno-lint-ignore no-explicit-any
     function createNestedContext(): TestContext {
       return {
         // deno-lint-ignore no-explicit-any

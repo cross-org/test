@@ -14,9 +14,10 @@ function transformOptions(options?: WrappedTestOptions) {
 function createFallbackContext(): TestContext {
   return {
     // deno-lint-ignore no-explicit-any
-    step: async (): Promise<any> => {
+    step: (): Promise<any> => {
       // No-op: older Node versions don't support nested tests
       console.warn("Warning: Nested steps are not fully supported in this Node version. Consider upgrading to Node 18.17.0+");
+      return Promise.resolve();
     },
   };
 }
