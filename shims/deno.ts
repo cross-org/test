@@ -1,4 +1,4 @@
-import type { TestSubject, TestContext, WrappedTestOptions } from "../mod.ts"; // Assuming cross runtime types are here
+import type { TestContext, TestSubject, WrappedTestOptions } from "../mod.ts"; // Assuming cross runtime types are here
 
 export function wrappedTest(name: string, testFn: TestSubject, options: WrappedTestOptions) {
   // @ts-ignore The Deno namespace isn't available in Node or Bun
@@ -11,9 +11,9 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
         step: async (stepName: string, stepFn: () => void | Promise<void>) => {
           // @ts-ignore context.step exists in Deno
           return await context.step(stepName, stepFn);
-        }
+        },
       };
-      
+
       // Adapt the context here
       let testFnPromise = undefined;
       const callbackPromise = new Promise((resolve, reject) => {

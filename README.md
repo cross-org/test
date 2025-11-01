@@ -48,17 +48,17 @@ import { assertEquals } from "@std/assert";
 
 test("User registration flow", async (context) => {
   let userId;
-  
+
   await context.step("Create user", () => {
     userId = createUser("john@example.com");
     assertEquals(typeof userId, "string");
   });
-  
+
   await context.step("Verify user exists", () => {
     const user = getUser(userId);
     assertEquals(user.email, "john@example.com");
   });
-  
+
   await context.step("Delete user", () => {
     deleteUser(userId);
     assertEquals(getUser(userId), null);

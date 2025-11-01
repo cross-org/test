@@ -1,5 +1,5 @@
 import { test } from "bun:test";
-import type { TestSubject, TestContext, WrappedTestOptions } from "../mod.ts";
+import type { TestContext, TestSubject, WrappedTestOptions } from "../mod.ts";
 
 export async function wrappedTest(
   name: string,
@@ -13,9 +13,9 @@ export async function wrappedTest(
         // Bun supports nested tests using test() inside another test
         // We can use test() directly as it will be nested
         return await test(stepName, stepFn);
-      }
+      },
     };
-    
+
     // Adapt the context here
     let testFnPromise = undefined;
     const callbackPromise = new Promise((resolve, reject) => {
