@@ -1,9 +1,26 @@
 import { CurrentRuntime, Runtime } from "@cross/runtime";
 
 /**
+ * Step function for nested tests
+ */
+export type StepFunction = (name: string, fn: () => void | Promise<void>) => Promise<void>;
+
+/**
+ * Test context with step support
+ */
+export interface TestContext {
+  /**
+   * Run a sub-test as a step of the parent test
+   * @param name - The name of the step
+   * @param fn - The function to run for this step
+   */
+  step: StepFunction;
+}
+
+/**
  * Test subject
  */
-export type TestSubject = (context: unknown | undefined, done: (value?: unknown) => void) => void | Promise<void>;
+export type TestSubject = (context: TestContext, done: (value?: unknown) => void) => void | Promise<void>;
 
 /**
  * Runtime independent test function
