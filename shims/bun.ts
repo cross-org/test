@@ -1,4 +1,4 @@
-import { test, describe } from "bun:test";
+import { test } from "bun:test";
 import type { TestSubject, TestContext, WrappedTestOptions } from "../mod.ts";
 
 export async function wrappedTest(
