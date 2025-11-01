@@ -101,3 +101,44 @@ test("Async parent test with nested steps", async (context) => {
     assertEquals(counter, 2);
   });
 });
+
+// Test with callback-based step (testing the new feature)
+test("Test with callback-based steps", async (context) => {
+  let stepCompleted = false;
+
+  await context.step("Callback-based step", (_stepContext, done) => {
+    setTimeout(() => {
+      stepCompleted = true;
+      assertEquals(stepCompleted, true);
+      done();
+    }, 100);
+  }, { waitForCallback: true });
+
+  // Verify step completed before moving on
+  assertEquals(stepCompleted, true);
+});
+
+// Test with multiple callback-based steps
+test("Test with multiple callback-based steps", async (context) => {
+  const results: number[] = [];
+
+  await context.step("Step 1 with callback", (_stepContext, done) => {
+    setTimeout(() => {
+      results.push(1);
+      assertEquals(results.length, 1);
+      done();
+    }, 50);
+  }, { waitForCallback: true });
+
+  await context.step("Step 2 with callback", (_stepContext, done) => {
+    setTimeout(() => {
+      results.push(2);
+      assertEquals(results.length, 2);
+      done();
+    }, 50);
+  }, { waitForCallback: true });
+
+  await context.step("Step 3 verify", () => {
+    assertEquals(results, [1, 2]);
+  });
+});

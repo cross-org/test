@@ -1,9 +1,29 @@
 import { CurrentRuntime, Runtime } from "@cross/runtime";
 
 /**
- * Step function for nested tests
+ * Simple step function without context or callback
  */
-export type StepFunction = (name: string, fn: () => void | Promise<void>) => Promise<void>;
+export type SimpleStepFunction = () => void | Promise<void>;
+
+/**
+ * Step subject - the function executed within a step with context and callback support
+ */
+export type StepSubject = (context: TestContext, done: (value?: unknown) => void) => void | Promise<void>;
+
+/**
+ * Step options
+ */
+export interface StepOptions {
+  waitForCallback?: boolean; // Whether to wait for the done-callback to be called
+}
+
+/**
+ * Step function for nested tests - supports both simple functions and functions with context/callback
+ */
+export type StepFunction = {
+  (name: string, fn: SimpleStepFunction): Promise<void>;
+  (name: string, fn: StepSubject, options: StepOptions): Promise<void>;
+};
 
 /**
  * Test context with step support
@@ -13,6 +33,7 @@ export interface TestContext {
    * Run a sub-test as a step of the parent test
    * @param name - The name of the step
    * @param fn - The function to run for this step
+   * @param options - Optional configuration for the step
    */
   step: StepFunction;
 }
