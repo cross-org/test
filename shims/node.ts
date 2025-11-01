@@ -9,6 +9,18 @@ function transformOptions(options?: WrappedTestOptions) {
   };
 }
 
+// Helper function to create a fallback context for older Node versions
+// This context has a no-op step function since nested tests aren't supported
+function createFallbackContext(): TestContext {
+  return {
+    // deno-lint-ignore no-explicit-any
+    step: async (): Promise<any> => {
+      // No-op: older Node versions don't support nested tests
+      console.warn("Warning: Nested steps are not fully supported in this Node version. Consider upgrading to Node 18.17.0+");
+    },
+  };
+}
+
 export function wrappedTest(
   name: string,
   testFn: TestSubject,
@@ -59,18 +71,12 @@ export function wrappedTest(
             // Simple function without context or callback
             await (stepFn as SimpleStepFunction)();
           } else if (isContextFunction) {
-            // Function with context parameter - create basic context
-            const nestedWrappedContext: TestContext = {
-              // deno-lint-ignore no-explicit-any
-              step: async (): Promise<any> => {},
-            };
+            // Function with context parameter - use fallback context
+            const nestedWrappedContext = createFallbackContext();
             await (stepFn as (context: TestContext) => void | Promise<void>)(nestedWrappedContext);
           } else {
             // Callback-based function
-            const nestedWrappedContext: TestContext = {
-              // deno-lint-ignore no-explicit-any
-              step: async (): Promise<any> => {},
-            };
+            const nestedWrappedContext = createFallbackContext();
             let stepFnPromise = undefined;
             const stepCallbackPromise = new Promise((resolve, reject) => {
               stepFnPromise = (stepFn as StepSubject)(nestedWrappedContext, (e) => {
@@ -122,16 +128,10 @@ export function wrappedTest(
             if (isNestedSimple && !isNestedCallback) {
               await (nestedStepFn as SimpleStepFunction)();
             } else if (isNestedContext) {
-              const fallbackContext: TestContext = {
-                // deno-lint-ignore no-explicit-any
-                step: async (): Promise<any> => {},
-              };
+              const fallbackContext = createFallbackContext();
               await (nestedStepFn as (context: TestContext) => void | Promise<void>)(fallbackContext);
             } else {
-              const fallbackContext: TestContext = {
-                // deno-lint-ignore no-explicit-any
-                step: async (): Promise<any> => {},
-              };
+              const fallbackContext = createFallbackContext();
               let nestedStepFnPromise = undefined;
               const nestedCallbackPromise = new Promise((resolve, reject) => {
                 nestedStepFnPromise = (nestedStepFn as StepSubject)(fallbackContext, (e) => {
