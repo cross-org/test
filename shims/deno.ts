@@ -78,7 +78,8 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
                 }
               });
             } else {
-              // Fallback: execute step directly without Deno nesting when context is not available
+              // Fallback: execute step directly without Deno nesting when context lacks step method or is undefined
+              // This can occur at deeper nesting levels where Deno's context.step may not be available
               if (isNestedSimple && !isNestedCallback) {
                 await (nestedStepFn as SimpleStepFunction)();
               } else if (isNestedContext) {
