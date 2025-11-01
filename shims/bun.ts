@@ -12,7 +12,7 @@ export async function wrappedTest(
       step: async (stepName: string, stepFn: () => void | Promise<void>) => {
         // Bun supports nested tests using test() inside another test
         // We can use test() directly as it will be nested
-        await test(stepName, stepFn);
+        return await test(stepName, stepFn);
       }
     };
     
