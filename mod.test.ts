@@ -217,3 +217,36 @@ test("Complex nested hierarchy", async (context) => {
 
   assertEquals(visited, ["root", "a", "a1", "a2", "b", "b1"]);
 });
+
+// Test three-level nesting with mixed async/callback operations
+test("Three-Level Nesting with Mixed Operations", async (context) => {
+  let executionCount = 0;
+
+  await context.step("Level 1", async (context: import("./mod.ts").TestContext) => {
+    executionCount++;
+    assertEquals(executionCount, 1);
+
+    await context.step("Level 2", async (context: import("./mod.ts").TestContext) => {
+      executionCount++;
+      assertEquals(executionCount, 2);
+
+      // Test Level 3 with async operation
+      await context.step("Level 3 - Async", async () => {
+        executionCount++;
+        await new Promise((resolve) => setTimeout(() => resolve(undefined), 5));
+        assertEquals(executionCount, 3);
+      });
+
+      // Test Level 3 with callback operation
+      await context.step("Level 3 - Callback", (_context: import("./mod.ts").TestContext, done: (value?: unknown) => void) => {
+        executionCount++;
+        setTimeout(() => {
+          assertEquals(executionCount, 4);
+          done();
+        }, 5);
+      }, { waitForCallback: true });
+    });
+  });
+
+  assertEquals(executionCount, 4);
+});

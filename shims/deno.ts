@@ -54,20 +54,44 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
             const isNestedContext = nestedStepFn.length === 1 && !nestedStepOptions?.waitForCallback;
             const isNestedCallback = nestedStepOptions?.waitForCallback === true;
 
-            // @ts-ignore context.step exists in Deno
-            await denoContext.step(nestedStepName, async (deeperContext) => {
+            if (denoContext && typeof denoContext.step === "function") {
+              // @ts-ignore context.step exists in Deno
+              await denoContext.step(nestedStepName, async (deeperContext) => {
+                if (isNestedSimple && !isNestedCallback) {
+                  await (nestedStepFn as SimpleStepFunction)();
+                } else if (isNestedContext) {
+                  // Recursive: create another level of nesting
+                  const deeperWrappedContext = createNestedContext(deeperContext);
+                  await (nestedStepFn as (context: TestContext) => void | Promise<void>)(deeperWrappedContext);
+                } else {
+                  // Callback-based nested step
+                  const deeperWrappedContext = createNestedContext(deeperContext);
+                  let nestedStepFnPromise = undefined;
+                  const nestedCallbackPromise = new Promise((resolve, reject) => {
+                    nestedStepFnPromise = (nestedStepFn as StepSubject)(deeperWrappedContext, (e) => {
+                      if (e) reject(e);
+                      else resolve(0);
+                    });
+                  });
+                  if (nestedStepOptions?.waitForCallback) await nestedCallbackPromise;
+                  await nestedStepFnPromise;
+                }
+              });
+            } else {
+              // Fallback: execute step directly without Deno nesting when context lacks step method or is undefined
+              // This can occur at deeper nesting levels where Deno's context.step may not be available
               if (isNestedSimple && !isNestedCallback) {
                 await (nestedStepFn as SimpleStepFunction)();
               } else if (isNestedContext) {
-                // Recursive: create another level of nesting
-                const deeperWrappedContext = createNestedContext(deeperContext);
-                await (nestedStepFn as (context: TestContext) => void | Promise<void>)(deeperWrappedContext);
+                // Create a fallback context for deeper nesting
+                const fallbackContext = createNestedContext(undefined);
+                await (nestedStepFn as (context: TestContext) => void | Promise<void>)(fallbackContext);
               } else {
-                // Callback-based nested step
-                const deeperWrappedContext = createNestedContext(deeperContext);
+                // Callback-based step without Deno context
+                const fallbackContext = createNestedContext(undefined);
                 let nestedStepFnPromise = undefined;
                 const nestedCallbackPromise = new Promise((resolve, reject) => {
-                  nestedStepFnPromise = (nestedStepFn as StepSubject)(deeperWrappedContext, (e) => {
+                  nestedStepFnPromise = (nestedStepFn as StepSubject)(fallbackContext, (e) => {
                     if (e) reject(e);
                     else resolve(0);
                   });
@@ -75,7 +99,7 @@ export function wrappedTest(name: string, testFn: TestSubject, options: WrappedT
                 if (nestedStepOptions?.waitForCallback) await nestedCallbackPromise;
                 await nestedStepFnPromise;
               }
-            });
+            }
           },
         };
       }
