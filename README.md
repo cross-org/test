@@ -2,8 +2,19 @@
 
 [![JSR Version](https://jsr.io/badges/@cross/test?v=bust)](https://jsr.io/@cross/test) [![JSR Score](https://jsr.io/badges/@cross/test/score?v=bust)](https://jsr.io/@cross/test/score)
 
-@cross/test is a minimal testing framework designed for seamless use across Deno, Bun, and Node.js. Works great with @std/assert and @std/expect for assertions, and sinon for spying. Part of the
-@cross suite - check out our growing collection of cross-runtime tools at [github.com/cross-org](https://github.com/cross-org).
+A minimal, focused testing framework for writing tests that run identically across Deno, Bun, and Node.js. Part of the @cross suite - check out our growing collection of cross-runtime tools at
+[github.com/cross-org](https://github.com/cross-org).
+
+### Why @cross/test?
+
+While `node:test` now works across runtimes, @cross/test provides unique advantages:
+
+- **🎯 Unified Simple API** - Single `test()` function with consistent behavior across all runtimes, no `describe`/`it` complexity
+- **📦 JSR-First** - Seamlessly works with JSR packages like `@std/assert` and `@std/expect`
+- **🪜 Test Steps** - Built-in `context.step()` support for organizing tests into sequential steps with shared state
+- **🔄 Callback Support** - Native `waitForCallback` option for callback-based async tests
+- **🎨 Minimal Surface** - Focused API that abstracts runtime differences without bloat
+- **🔌 Runtime Detection** - Automatic runtime detection via `@cross/runtime`
 
 ### Installation
 
@@ -18,7 +29,7 @@ bunx jsr add @cross/test @std/assert # Bun
 
 ### Examples
 
-#### Assertions using @std/assert
+#### Simple tests with @std/assert
 
 ```javascript
 import { test } from "@cross/test";
@@ -28,11 +39,12 @@ test("Multiplication", () => {
   assertEquals(5 * 4, 20);
 });
 
-test("Multiplication with timeout", () => {
+test("Test with timeout", () => {
   assertEquals(5 * 4, 20);
 }, { timeout: 1000 });
 
-test("Async test", (_context, done) => {
+// Callback-based async test (unique to @cross/test)
+test("Callback-based async", (_context, done) => {
   setTimeout(() => {
     assertNotEquals(5, 4);
     done();
@@ -40,7 +52,9 @@ test("Async test", (_context, done) => {
 }, { waitForCallback: true });
 ```
 
-#### Nested tests using steps
+#### Test steps for sequential workflows
+
+Organize tests into steps with shared state - perfect for integration tests and workflows:
 
 ```javascript
 import { test } from "@cross/test";
@@ -65,6 +79,8 @@ test("User registration flow", async (context) => {
   });
 });
 ```
+
+Steps share the parent test's scope and execute sequentially, making complex test flows easy to write and debug.
 
 #### Spying, mocking and stubbing using sinon
 
