@@ -44,5 +44,5 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Cache dependencies
+      - name: Install dependencies
         run: deno install

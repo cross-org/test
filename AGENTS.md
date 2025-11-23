@@ -23,8 +23,7 @@ Do before you commit:
 
 - Deno: deno fmt --check; deno lint; deno check mod.ts; deno test -A
 - Bun: tests run with bun test after jsr/npm deps install
-- Node (18/20/22): tests run with tsx; ESM required (package.json
-  {"type":"module"})
+- Node (18/20/22): tests run with tsx; ESM required
 
 Keep in mind:
 
