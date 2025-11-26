@@ -1,5 +1,5 @@
-import { executeStepFn, getFunctionType } from "../mod.ts";
-import type { ContextStepFunction, SimpleStepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "../mod.ts";
+import { executeStepFn, getFunctionType } from "./shared.ts";
+import type { ContextStepFunction, SimpleStepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "./shared.ts";
 
 export function wrappedTest(name: string, testFn: TestSubject, options: WrappedTestOptions): Promise<void> {
   // @ts-ignore The Deno namespace isn't available in Node or Bun
