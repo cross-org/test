@@ -23,6 +23,45 @@ export interface StepOptions {
 }
 
 /**
+ * Determines the function type based on arity and options
+ * @internal
+ */
+export function getFunctionType(fn: SimpleStepFunction | ContextStepFunction | StepSubject, options?: StepOptions): "simple" | "context" | "callback" {
+  if (options?.waitForCallback) return "callback";
+  if (fn.length === 0) return "simple";
+  if (fn.length === 1) return "context";
+  return "callback";
+}
+
+/**
+ * Executes a step function with the appropriate handling based on its type
+ * @internal
+ */
+export async function executeStepFn(
+  stepFn: SimpleStepFunction | ContextStepFunction | StepSubject,
+  fnType: "simple" | "context" | "callback",
+  createContext: () => TestContext,
+  waitForCallback?: boolean,
+): Promise<void> {
+  if (fnType === "simple") {
+    await (stepFn as SimpleStepFunction)();
+  } else if (fnType === "context") {
+    await (stepFn as ContextStepFunction)(createContext());
+  } else {
+    const ctx = createContext();
+    let stepFnPromise: void | Promise<void> | undefined;
+    const callbackPromise = new Promise<void>((resolve, reject) => {
+      stepFnPromise = (stepFn as StepSubject)(ctx, (e) => {
+        if (e) reject(e);
+        else resolve();
+      });
+    });
+    if (waitForCallback) await callbackPromise;
+    await stepFnPromise;
+  }
+}
+
+/**
  * Step function for nested tests - supports simple functions, context functions, and callback functions
  */
 export type StepFunction = {
