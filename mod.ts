@@ -65,7 +65,27 @@ export interface WrappedTestOptions {
   waitForCallback?: boolean; // Whether to wait for the done-callback to be called
 }
 
+/**
+ * Browser test result entry
+ */
+export interface BrowserTestResult {
+  name: string;
+  passed: boolean;
+  error?: Error;
+  duration: number;
+}
+
+/**
+ * Type for browser-only helper functions
+ */
+type BrowserTestHelpers = {
+  getTestResults: () => BrowserTestResult[];
+  printTestSummary: () => void;
+};
+
 let wrappedTestToUse: WrappedTest;
+let browserHelpers: BrowserTestHelpers | undefined;
+
 if (CurrentRuntime == Runtime.Deno) {
   const { wrappedTest } = await import("./shims/deno.ts");
   // @ts-ignore js
@@ -78,6 +98,14 @@ if (CurrentRuntime == Runtime.Deno) {
   const { wrappedTest } = await import("./shims/bun.ts");
   // @ts-ignore js
   wrappedTestToUse = wrappedTest;
+} else if (CurrentRuntime == Runtime.Browser) {
+  const browserShim = await import("./shims/browser.ts");
+  // @ts-ignore js
+  wrappedTestToUse = browserShim.wrappedTest;
+  browserHelpers = {
+    getTestResults: browserShim.getTestResults,
+    printTestSummary: browserShim.printTestSummary,
+  };
 } else {
   throw new Error("Unsupported runtime");
 }
@@ -89,4 +117,22 @@ if (CurrentRuntime == Runtime.Deno) {
  */
 export async function test(name: string, testFn: TestSubject, options: WrappedTestOptions = {}) {
   await wrappedTestToUse(name, testFn, options);
+}
+
+/**
+ * Get a summary of all test results (browser only).
+ * Returns undefined when not running in a browser environment.
+ * Useful for integrating with CI systems or custom reporting.
+ */
+export function getTestResults(): BrowserTestResult[] | undefined {
+  return browserHelpers?.getTestResults();
+}
+
+/**
+ * Print a summary of all test results to the console (browser only).
+ * Does nothing when not running in a browser environment.
+ * Call this at the end of your test file to see the overall results.
+ */
+export function printTestSummary(): void {
+  browserHelpers?.printTestSummary();
 }
