@@ -26,21 +26,10 @@
     "framework"
   ],
   "type": "module",
-  "main": "./dist/mod.cjs",
-  "module": "./dist/mod.js",
-  "types": "./dist/mod.d.ts",
+  "main": "./dist/mod.js",
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "import": {
-        "types": "./dist/mod.d.ts",
-        "default": "./dist/mod.js"
-      },
-      "require": {
-        "types": "./dist/mod.d.cts",
-        "default": "./dist/mod.cjs"
-      }
-    }
+    ".": "./dist/mod.js"
   },
   "license": "MIT"
 }
