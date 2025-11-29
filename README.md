@@ -1,9 +1,9 @@
-## Cross-runtime Testing for Deno, Bun, and Node.js
+## Cross-runtime Testing for Deno, Bun, Node.js, and Browsers
 
 [![JSR Version](https://jsr.io/badges/@cross/test?v=bust)](https://jsr.io/@cross/test) [![JSR Score](https://jsr.io/badges/@cross/test/score?v=bust)](https://jsr.io/@cross/test/score)
 
-A minimal, focused testing framework for writing tests that run identically across Deno, Bun, and Node.js. Part of the @cross suite - check out our growing collection of cross-runtime tools at
-[github.com/cross-org](https://github.com/cross-org).
+A minimal, focused testing framework for writing tests that run identically across Deno, Bun, Node.js, and browsers. Part of the @cross suite - check out our growing collection of cross-runtime tools
+at [github.com/cross-org](https://github.com/cross-org).
 
 ### Why @cross/test?
 
@@ -13,6 +13,7 @@ While `node:test` now works across runtimes, @cross/test provides unique advanta
 - **JSR-First** - Seamlessly works with JSR packages like `@std/assert` and `@std/expect`
 - **Test Steps** - Built-in `context.step()` support for organizing tests into sequential steps with shared state
 - **Callback Support** - Native `waitForCallback` option for callback-based async tests
+- **Browser Support** - Run the same tests in browser environments with console output
 - **Minimal Surface** - Focused API that abstracts runtime differences without bloat
 
 ### Installation
@@ -135,6 +136,43 @@ test("calls bar during execution of foo", () => {
 - **Node.js (TS):** `npx tsx --test` _Remember `{ "type": "module" }` in package.json_
 - **Deno:** `deno test`
 - **Bun:** `bun test`
+- **Browser:** Include the bundled test file in an HTML page (see below)
+
+### Browser Usage
+
+@cross/test can run tests directly in the browser. Results are output to the browser's developer console with styled formatting.
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Browser Tests</title>
+  </head>
+  <body>
+    <script type="module">
+      import { printTestSummary, test } from "https://esm.sh/jsr/@cross/test";
+
+      // Your tests run automatically when imported
+      test("Browser test", () => {
+        if (1 + 1 !== 2) throw new Error("Math is broken");
+      });
+
+      test("Async browser test", async () => {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      });
+
+      // Print summary after all tests complete
+      setTimeout(() => printTestSummary(), 1000);
+    </script>
+  </body>
+</html>
+```
+
+The browser shim provides:
+
+- `test()` - Same API as other runtimes
+- `getTestResults()` - Get an array of test results for custom reporting
+- `printTestSummary()` - Print a formatted summary to the console
 
 ### Configuring CI
 
