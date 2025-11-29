@@ -1,15 +1,16 @@
 {
   "name": "@cross/test",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "exports": "./mod.ts",
   "fmt": {
     "lineWidth": 200
   },
   "tasks": {
-    "build:prep": "deno install && deno cache --allow-scripts=npm:esbuild build/build.ts",
+    "build:prep": "deno cache --allow-scripts=npm:esbuild build/build.ts",
     "build:clean": "deno run --allow-read --allow-write --allow-env build/build.ts -- clean",
     "build:npm": "deno run --allow-read --allow-write --allow-env build/build.ts -- package",
     "build:esbuild": "deno run --allow-read --allow-write --allow-env --allow-run build/build.ts -- build",
+    "build:dist": "deno task build:prep && deno task build:clean && deno task build:esbuild && deno task build:npm",
     "build": "deno task build:prep && deno test -A && deno task build:clean && deno task build:esbuild && deno task build:npm"
   },
   "imports": {

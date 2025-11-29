@@ -16,6 +16,7 @@ export async function build(
     console.log("All builds completed successfully.");
   } catch (error) {
     console.error("Build failed:", error);
+    throw error;
   }
 }
 
@@ -34,8 +35,19 @@ const currentScriptDir = dirname(fromFileUrl(import.meta.url));
 const relativeProjectRoot = resolve(currentScriptDir, baseRelativeProjectRoot);
 const resolvedDistPath = resolve(relativeProjectRoot, "dist");
 
+// Get command from args - supports both "-- clean" and "clean" formats
+const command = Deno.args.find((arg) => ["clean", "build", "package"].includes(arg));
+
+if (!command) {
+  console.log("Usage: deno run build.ts -- <clean|build|package>");
+  console.log("  clean   - Remove build artifacts");
+  console.log("  build   - Transpile and generate typings");
+  console.log("  package - Generate package.json");
+  Deno.exit(1);
+}
+
 /* Handle argument `clean`: Rimraf build artifacts */
-if (Deno.args[1] === "clean") {
+if (command === "clean") {
   for (
     const filePath of [
       "package.json",
@@ -46,11 +58,16 @@ if (Deno.args[1] === "clean") {
   ) {
     try {
       await Deno.remove(filePath, { recursive: true });
-    } catch (_e) { /* No-op */ }
+    } catch (e) {
+      // Only ignore NotFound errors - these are expected when artifacts don't exist yet
+      if (!(e instanceof Deno.errors.NotFound)) {
+        throw e;
+      }
+    }
   }
 
   /* Handle argument `build`: Transpile and generate typings */
-} else if (Deno.args[1] === "build") {
+} else if (command === "build") {
   await build({
     entryPoints: [resolve(relativeProjectRoot, "mod.ts")],
     bundle: true,
@@ -97,7 +114,7 @@ if (Deno.args[1] === "clean") {
   );
 
   /* Handle argument `package`: Generate package.json based on a base config and values from deno.json */
-} else if (Deno.args[1] === "package") {
+} else if (command === "package") {
   // Read version from deno.json
   const denoConfig = await readJson<{ version: string; name: string }>(
     resolve(relativeProjectRoot, "deno.json"),

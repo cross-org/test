@@ -45,11 +45,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Build npm package
-        run: |
-          deno task build:prep
-          deno task build:clean
-          deno task build:esbuild
-          deno task build:npm
+        run: deno task build:dist
 
       - name: Publish package to npm
         run: npm publish
