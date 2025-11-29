@@ -150,7 +150,7 @@ test("calls bar during execution of foo", () => {
   </head>
   <body>
     <script type="module">
-      import { printTestSummary, test } from "./your-bundled-tests.js";
+      import { printTestSummary, test } from "https://esm.sh/jsr/@cross/test";
 
       // Your tests run automatically when imported
       test("Browser test", () => {
@@ -168,7 +168,7 @@ test("calls bar during execution of foo", () => {
 </html>
 ```
 
-For browser usage, you'll need to bundle your tests using a tool like esbuild, rollup, or webpack. The browser shim provides:
+The browser shim provides:
 
 - `test()` - Same API as other runtimes
 - `getTestResults()` - Get an array of test results for custom reporting
