@@ -21,3 +21,13 @@ jobs:
       test_target: "*.test.ts"
       jsr_dependencies: "@std/assert @std/async @cross/runtime"
       npm_dependencies: "sinon"
+  npm_build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Build npm package
+        run: deno task build:dist
