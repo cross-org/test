@@ -1,4 +1,4 @@
-name: Publish to jsr
+name: Publish to JSR and npm
 on:
   release:
     types: [released]
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  publish-jsr:
     runs-on: ubuntu-latest
 
     permissions:
@@ -21,5 +21,37 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: Publish package
+      - name: Publish package to JSR
         run: deno publish
+
+  publish-npm:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v2.x
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Build npm package
+        run: |
+          deno task build:prep
+          deno task build:clean
+          deno task build:esbuild
+          deno task build:npm
+
+      - name: Publish package to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
