@@ -1,0 +1,46 @@
+{
+  "description": "Cross-runtime testing for Deno, Bun, and Node.js",
+  "author": "Hexagon <github.com/hexagon>",
+  "homepage": "https://github.com/cross-org/test",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cross-org/test"
+  },
+  "bugs": {
+    "url": "https://github.com/cross-org/test/issues"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "engines": {
+    "node": ">=18.0"
+  },
+  "keywords": [
+    "test",
+    "testing",
+    "cross-runtime",
+    "deno",
+    "bun",
+    "node",
+    "nodejs",
+    "framework"
+  ],
+  "type": "module",
+  "main": "./dist/mod.cjs",
+  "module": "./dist/mod.js",
+  "types": "./dist/mod.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/mod.d.ts",
+        "default": "./dist/mod.js"
+      },
+      "require": {
+        "types": "./dist/mod.d.cts",
+        "default": "./dist/mod.cjs"
+      }
+    }
+  },
+  "license": "MIT"
+}
