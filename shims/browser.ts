@@ -141,7 +141,7 @@ export async function wrappedTest(
         else resolve(0);
       });
     });
-    let timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
     try {
       if (options.timeout) {
         const timeoutPromise = new Promise((_, reject) => {
