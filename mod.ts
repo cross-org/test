@@ -1,53 +1,10 @@
 import { CurrentRuntime, Runtime } from "@cross/runtime";
 
-/**
- * Simple step function without context or callback
- */
-export type SimpleStepFunction = () => void | Promise<void>;
+// Re-export types and utilities from shared module for public API
+export type { ContextStepFunction, SimpleStepFunction, StepFunction, StepOptions, StepSubject, TestContext, TestSubject, WrappedTestOptions } from "./shims/shared.ts";
 
-/**
- * Context step function - function with context parameter for nested steps
- */
-export type ContextStepFunction = (context: TestContext) => void | Promise<void>;
-
-/**
- * Step subject - the function executed within a step with context and callback support
- */
-export type StepSubject = (context: TestContext, done: (value?: unknown) => void) => void | Promise<void>;
-
-/**
- * Step options
- */
-export interface StepOptions {
-  waitForCallback?: boolean; // Whether to wait for the done-callback to be called
-}
-
-/**
- * Step function for nested tests - supports simple functions, context functions, and callback functions
- */
-export type StepFunction = {
-  (name: string, fn: SimpleStepFunction): Promise<void>;
-  (name: string, fn: ContextStepFunction): Promise<void>;
-  (name: string, fn: StepSubject, options: StepOptions): Promise<void>;
-};
-
-/**
- * Test context with step support
- */
-export interface TestContext {
-  /**
-   * Run a sub-test as a step of the parent test
-   * @param name - The name of the step
-   * @param fn - The function to run for this step
-   * @param options - Optional configuration for the step
-   */
-  step: StepFunction;
-}
-
-/**
- * Test subject
- */
-export type TestSubject = (context: TestContext, done: (value?: unknown) => void) => void | Promise<void>;
+// Internal utilities are not re-exported to keep the public API clean
+// They are used internally by the shims
 
 /**
  * Runtime independent test function
@@ -56,14 +13,7 @@ export interface WrappedTest {
   (name: string, testFn: TestSubject, options?: WrappedTestOptions): Promise<void>;
 }
 
-/**
- * Runtime independent test options
- */
-export interface WrappedTestOptions {
-  timeout?: number; // Timeout duration in milliseconds (optional)
-  skip?: boolean; // Whether to skip the test (optional)
-  waitForCallback?: boolean; // Whether to wait for the done-callback to be called
-}
+import type { TestSubject, WrappedTestOptions } from "./shims/shared.ts";
 
 /**
  * Browser test result entry
