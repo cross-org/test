@@ -6,6 +6,19 @@ export async function wrappedTest(
   testFn: TestSubject,
   options: WrappedTestOptions,
 ): Promise<void> {
+  // Build Bun test options - pass timeout to Bun's native test runner
+  // If timeout is 0 or not specified, Bun will use its default 5s timeout
+  // If we're using custom timeout logic, we need to set a high value for Bun
+  const bunOptions: { timeout?: number; skip?: boolean } = {
+    skip: options?.skip || false,
+  };
+
+  // If a timeout is specified and > 0, pass it to Bun's native timeout
+  // This makes Bun's timeout and our custom timeout work together
+  if (options.timeout && options.timeout > 0) {
+    bunOptions.timeout = options.timeout;
+  }
+
   return await test(name, async () => {
     // Create wrapped context with step method
     const wrappedContext: TestContext = {
@@ -104,5 +117,5 @@ export async function wrappedTest(
       await testFnPromise;
       if (options.waitForCallback) await callbackPromise;
     }
-  });
+  }, bunOptions);
 }
