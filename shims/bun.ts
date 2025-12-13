@@ -87,7 +87,7 @@ export async function wrappedTest(
     });
     let timeoutId: number = -1; // Store the timeout ID
     try {
-      if (options.timeout) {
+      if (options.timeout && options.timeout > 0) {
         const timeoutPromise = new Promise((_, reject) => {
           timeoutId = setTimeout(() => {
             reject(new Error("Test timed out"));
@@ -98,10 +98,8 @@ export async function wrappedTest(
         // No timeout, just await testFn
         await options.waitForCallback ? callbackPromise : testFnPromise;
       }
-    } catch (error) {
-      throw error;
     } finally {
-      if (timeoutId) clearTimeout(timeoutId);
+      if (timeoutId !== -1) clearTimeout(timeoutId);
       // Make sure testFnPromise has completed
       await testFnPromise;
       if (options.waitForCallback) await callbackPromise;
