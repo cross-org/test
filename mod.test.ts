@@ -257,7 +257,7 @@ test("Test with timeout = 0 (no timeout)", async () => {
   assertEquals(1, 1);
 }, { timeout: 0 });
 
-// Test timeout with negative value (should be treated as no timeout)  
+// Test timeout with negative value (should be treated as no timeout)
 test("Test with negative timeout (no timeout)", async () => {
   await delay(50);
   assertEquals(1, 1);
