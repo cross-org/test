@@ -250,3 +250,27 @@ test("Three-Level Nesting with Mixed Operations", async (context) => {
 
   assertEquals(executionCount, 4);
 });
+
+// Test timeout with zero value (should be treated as no timeout)
+test("Test with timeout = 0 (no timeout)", async () => {
+  await delay(50);
+  assertEquals(1, 1);
+}, { timeout: 0 });
+
+// Test timeout with negative value (should be treated as no timeout)
+test("Test with negative timeout (no timeout)", async () => {
+  await delay(50);
+  assertEquals(1, 1);
+}, { timeout: -100 });
+
+// Test that completes well within timeout
+test("Test completes within generous timeout", async () => {
+  await delay(50);
+  assertEquals(1, 1);
+}, { timeout: 5000 });
+
+// Test longer execution with sufficient timeout (7 seconds with 10 second timeout)
+test("7 second execution with 10 second timeout", async () => {
+  await delay(7000);
+  assertEquals(1, 1);
+}, { timeout: 10000 });

@@ -3,10 +3,17 @@ import type { ContextStepFunction, SimpleStepFunction, StepOptions, StepSubject,
 import type { TestSubject } from "../mod.ts";
 
 function transformOptions(options?: WrappedTestOptions) {
-  return {
+  const nodeOptions: { skip: boolean; timeout?: number } = {
     skip: options?.skip || false,
-    timeout: options?.timeout,
   };
+
+  // Node.js requires timeout to be > 0 and <= 2147483647
+  // Only set timeout if it's a valid positive number
+  if (options?.timeout && options.timeout > 0) {
+    nodeOptions.timeout = options.timeout;
+  }
+
+  return nodeOptions;
 }
 
 // Helper function to create a fallback context for older Node versions
