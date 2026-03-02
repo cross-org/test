@@ -24,6 +24,6 @@
     "sinon": "npm:sinon@~19.0.2"
   },
   "publish": {
-    "exclude": [".github", "*.test.ts", "build", "dist"]
+    "exclude": [".github", "*.test.ts", "build", "dist", "npm.ts"]
   }
 }

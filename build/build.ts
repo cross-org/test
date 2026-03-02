@@ -67,9 +67,34 @@ if (command === "clean") {
 
   /* Handle argument `build`: Transpile and generate typings */
 } else if (command === "build") {
+  // Plugin to bundle JSR packages like @cross/runtime by resolving them via Deno's cache
+  const jsrResolverPlugin: esbuild.Plugin = {
+    name: "jsr-resolver",
+    setup(pluginBuild) {
+      pluginBuild.onResolve({ filter: /^@cross\/runtime$/ }, async (_args) => {
+        const cmd = new Deno.Command("deno", {
+          args: ["info", "--json", "jsr:@cross/runtime"],
+          cwd: relativeProjectRoot,
+          stdout: "piped",
+          stderr: "piped",
+        });
+        const { stdout, success } = await cmd.output();
+        if (!success) return null;
+        const info = JSON.parse(new TextDecoder().decode(stdout));
+        const mod = info.modules?.find((m: { specifier: string; local?: string }) => m.local && m.specifier?.endsWith("mod.ts"));
+        if (mod?.local) return { path: mod.local, namespace: "jsr-ts" };
+        return null;
+      });
+      pluginBuild.onLoad({ filter: /.*/, namespace: "jsr-ts" }, async (args) => {
+        const contents = await Deno.readTextFile(args.path);
+        return { contents, loader: "ts" };
+      });
+    },
+  };
+
   // Build the ESM JavaScript bundle
   await build({
-    entryPoints: [resolve(relativeProjectRoot, "mod.ts")],
+    entryPoints: [resolve(relativeProjectRoot, "npm.ts")],
     bundle: true,
     minify: true,
     sourcemap: false,
@@ -78,8 +103,8 @@ if (command === "clean") {
     format: "esm",
     // Mark runtime-specific modules as external - they won't be bundled
     // node:test is a Node.js built-in, bun:test is a Bun built-in
-    // @cross/runtime is a JSR dependency that must be externalized
-    external: ["bun:test", "node:test", "@cross/runtime"],
+    external: ["bun:test", "node:test"],
+    plugins: [jsrResolverPlugin],
     // Use banner to add a comment
     banner: {
       js: `// @cross/test - Cross-runtime testing for Deno, Bun, and Node.js

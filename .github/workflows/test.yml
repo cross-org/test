@@ -33,3 +33,9 @@ jobs:
           deno-version: v2.x
       - name: Build npm package
         run: deno task build:dist
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Smoke test Node artifact
+        run: node -e "import('./dist/npm.js')"
